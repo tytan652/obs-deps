@@ -164,9 +164,9 @@ function Build-Main {
     if ( $script:PackageName -eq 'Dependencies' ) {
         $script:PackageName = 'deps'
     }
-    if ( $Dependencies -eq 'qt5' ) {
+    if ( $Dependencies -contains 'qt5' ) {
         $script:PackageName = 'qt5'
-    } elseif ( $Dependencies -eq 'qt6' ) {
+    } elseif ( $Dependencies -contains 'qt6' ) {
         $script:PackageName = 'qt6'
     }
 
@@ -182,6 +182,7 @@ function Build-Main {
     $SubDir = ''
     if ( $script:PackageName -like 'qt*' ) {
         $SubDir = 'deps.qt'
+        $Dependencies += 'ads'
     } else {
         $SubDir = 'deps.windows'
     }
