@@ -21,17 +21,19 @@ runs:
   steps:
     - name: Environment Setup
       id: qt-env-setup
-      shell: pwsh
+      shell: bash
       run: |
-        $QtDepHash = (Get-FileHash -Path "${{ github.workspace }}/deps.qt/qt${{ inputs.qtVersion }}.ps1" -Algorithm "SHA256").Hash
-        if ( Test-Path "${{ github.workspace }}/deps.qt/patches/Qt${{ inputs.qtVersion }}" ) {
-          $QtPatchHash = (Get-FileHash "${{ github.workspace }}/deps.qt/patches/Qt${{ inputs.qtVersion }}/win/*.patch" -Algorithm "SHA256").Hash
-        } else {
-          $QtPatchHash = "nopatches"
-        }
+        qt_dep_files=(deps.qt/10-qt${{ inputs.qtVersion }}.ps1)
+        qt_dep_files+=(deps.qt/20-ads.ps1)
+        qt_dep_hash=$(cat ${qt_dep_files} | sha256sum | cut -d " " -f 1)
+        if [[ -d ${{ github.workspace }}/deps.qt/patches/Qt${{ inputs.qtVersion }} ]]; then
+          qt_patch_hash=$(cat deps.qt/patches/Qt${{ inputs.qtVersion }}/win/*.patch | sha256sum | cut -d " " -f 1)
+        else
+          qt_patch_hash="nopatches"
+        fi
 
-        Write-Output "::set-output name=depHash::${QtDepHash}"
-        Write-Output "::set-output name=patchHash::${QtPatchHash}"
+        print "::set-output name=depHash::${qt_dep_hash}"
+        print "::set-output name=patchHash::${qt_patch_hash}"
 
     - name: Restore Windows Qt from Cache
       id: deps-cache
@@ -39,6 +41,7 @@ runs:
       with:
         path: |
           ${{ github.workspace }}/*_build_temp/qt${{ inputs.qtVersion }}*
+          ${{ github.workspace }}/*_build_temp/Qt-Advanced-Docking-System
           !${{ github.workspace }}/*_build_temp/**/.git
           !${{ github.workspace }}/*_build_temp/*.tar.gz
           !${{ github.workspace }}/*_build_temp/*.tar.xz
