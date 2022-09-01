@@ -27,9 +27,12 @@ runs:
         rehash
         /usr/bin/xcrun --sdk macosx -show-sdk-version &> /dev/null
 
-        qt_dep_hash=$(cat ${{ github.workspace }}/deps.qt/qt${{ inputs.qtVersion }}.zsh | sha256sum | cut -d " " -f 1)
+        qt_dep_files=(${{ github.workspace }}/deps.qt/qt${{ inputs.qtVersion }}.zsh)
+        qt_dep_files+=(${{ github.workspace }}/deps.qt/ads.zsh)
+        qt_dep_hash=$(cat ${qt_dep_files} | sha256sum | cut -d " " -f 1)
 
         patch_files=(${{ github.workspace }}/deps.qt/patches/Qt${{ inputs.qtVersion }}/*.patch(N))
+        patch_files+=(${{ github.workspace }}/deps.qt/patches/ADS/macos/*.patch(N))
         if (( #patch_files > 0 )) {
           qt_patch_hash=$(cat ${patch_files} | sha256sum | cut -d " " -f 1)
         } else {
@@ -45,6 +48,7 @@ runs:
       with:
         path: |
           ${{ github.workspace }}/*_build_temp/qt${{ inputs.qtVersion }}*
+          ${{ github.workspace }}/*_build_temp/ads*
           !${{ github.workspace }}/*_build_temp/**/.git
           !${{ github.workspace }}/*_build_temp/*.tar.gz
           !${{ github.workspace }}/*_build_temp/*.tar.xz

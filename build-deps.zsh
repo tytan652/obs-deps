@@ -137,7 +137,10 @@ build_dependencies() {
   if (( #deps )) {
     files=(${subdir}/*-(${~${(j:|:)deps}}).zsh)
   } elif [[ ${PACKAGE_NAME} == 'qt'* ]] {
-    files=(${subdir}/${PACKAGE_NAME}.zsh)
+    files=(
+      ${subdir}/${PACKAGE_NAME}.zsh
+      ${subdir}/ads.zsh
+    )
   } else {
     files=(${subdir}/*-*.zsh)
   }

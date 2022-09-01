@@ -1,0 +1,22 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index dea76a0..b799d21 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -67,6 +67,7 @@ add_library(ads::qtadvanceddocking ALIAS qtadvanceddocking)
+ target_link_libraries(qtadvanceddocking PUBLIC Qt${QT_VERSION_MAJOR}::Core 
+                                                Qt${QT_VERSION_MAJOR}::Gui 
+                                                Qt${QT_VERSION_MAJOR}::Widgets)
++option(QT_BIN_DIR "")
+ set_target_properties(qtadvanceddocking PROPERTIES
+     AUTOMOC ON
+     AUTORCC ON
+@@ -78,6 +79,9 @@ set_target_properties(qtadvanceddocking PROPERTIES
+     ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/${ads_PlatformDir}/lib"
+     LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/${ads_PlatformDir}/lib"
+     RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/${ads_PlatformDir}/bin"
++    AUTOMOC_EXECUTABLE "${QT_BIN_DIR}/moc"
++    AUTORCC_EXECUTABLE "${QT_BIN_DIR}/rcc"
++    AUTOUIC_EXECUTABLE "${QT_BIN_DIR}/uic"
+ )
+ include(CMakePackageConfigHelpers)
+ write_basic_package_version_file(
