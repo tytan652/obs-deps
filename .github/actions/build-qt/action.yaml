@@ -34,11 +34,11 @@ runs:
               brew install coreutils
             fi
 
-            deps_hash=$(cat ${PWD}/deps.qt/qt${{ inputs.qtVersion }}.zsh | sha256sum | cut -d " " -f 1)
+            deps_hash=$(cat ${PWD}/deps.qt/*.zsh | sha256sum | cut -d " " -f 1)
             patch_files=(${PWD}/deps.qt/patches/Qt${{ inputs.qtVersion }}/mac/*.patch)
             ;;
           Windows)
-            deps_hash=$(cat ${PWD}/deps.qt/qt${{ inputs.qtVersion }}.ps1 | sha256sum | cut -d " " -f 1)
+            deps_hash=$(cat ${PWD}/deps.qt/*.ps1 | sha256sum | cut -d " " -f 1)
             patch_files=(${PWD}/deps.qt/patches/Qt${{ inputs.qtVersion }}/win/*.patch)
             ;;
         esac
@@ -57,7 +57,7 @@ runs:
       uses: actions/cache/restore@v4
       with:
         path: |
-          ${{ inputs.workingDirectory }}/*_build_temp/qt${{ inputs.qtVersion }}*
+          ${{ inputs.workingDirectory }}/*_build_temp/*
           !${{ inputs.workingDirectory }}/*_build_temp/**/.git
           !${{ inputs.workingDirectory }}/*_build_temp/*.tar.gz
           !${{ inputs.workingDirectory }}/*_build_temp/*.tar.xz
@@ -91,7 +91,6 @@ runs:
           Target = '${{ inputs.target }}'
           Configuration = '${{ inputs.config }}'
           Shared = $true
-          Dependencies = 'qt${{ inputs.qtVersion }}'
           SkipBuild = $(if ( '${{ steps.deps-cache.outputs.cache-hit }}' -eq 'true' ) { $true } else { $false })
           SkipUnpack = $(if ( '${{ steps.deps-cache.outputs.cache-hit }}' -eq 'true' ) { $true } else { $false })
         }
@@ -103,7 +102,7 @@ runs:
       uses: actions/cache/save@v4
       with:
         path: |
-          ${{ inputs.workingDirectory }}/*_build_temp/qt${{ inputs.qtVersion }}*
+          ${{ inputs.workingDirectory }}/*_build_temp/*
           !${{ inputs.workingDirectory }}/*_build_temp/**/.git
           !${{ inputs.workingDirectory }}/*_build_temp/*.tar.gz
           !${{ inputs.workingDirectory }}/*_build_temp/*.tar.xz

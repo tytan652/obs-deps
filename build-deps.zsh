@@ -160,8 +160,6 @@ build_dependencies() {
   local -a files
   if (( #deps )) {
     files=(${subdir}/*-(${~${(j:|:)deps}}).zsh)
-  } elif [[ ${PACKAGE_NAME} == 'qt'* ]] {
-    files=(${subdir}/${PACKAGE_NAME}.zsh)
   } else {
     files=(${subdir}/*-*.zsh)
   }
