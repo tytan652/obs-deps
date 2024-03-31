@@ -222,7 +222,7 @@ function Build-Main {
 
     Pop-Location -Stack BuildTemp
 
-    if ( $Dependencies.Count -eq 0 -or $PackageName -eq 'qt' ) {
+    if ( $Dependencies.Count -eq 0 ) {
         if ( Test-Path -Path $ConfigData.OutputPath ) {
             Package-Dependencies
         }
